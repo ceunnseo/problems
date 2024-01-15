@@ -18,7 +18,8 @@ for i in range(n):
     graph.append(g)
 
 # 바이러스 퍼지는 것을 구현하는 bfs 함수
-def bfs(v, cnt, gra): #v : 바이러스가 담긴 큐, cnt : 안전 영역 개수
+def bfs(virus, cnt, gra): #v : 바이러스가 담긴 큐, cnt : 안전 영역 개수
+    v = deque(virus)
     while v:
         y, x = v.popleft()
         for (ny, nx) in (y-1, x), (y+1, x), (y, x-1), (y, x+1): #상하좌우
@@ -33,15 +34,15 @@ def bfs(v, cnt, gra): #v : 바이러스가 담긴 큐, cnt : 안전 영역 개�
 
 #빈칸 위치에서 벽을 세울 3개 조합 만들기
 for k in combinations(node, 3): #k : 튜플형태
-    v = copy.deepcopy(virus)
-    g = copy.deepcopy(graph)  # 그래프 원본 복사
+    #g = copy.deepcopy(graph)  # 2차원 그래프 원본 복사
+    g = [a[:] for a in graph] # 2차원 그래프 원본 복사
     #벽 세 개 만들기
     g[k[0][0]][k[0][1]] = 1
     g[k[1][0]][k[1][1]] = 1
     g[k[2][0]][k[2][1]] = 1
     # 안전 영역에 세 개의 벽을 세우고 (0 -> 1 값 변경)
 
-    z = bfs(v, cnt-3, g) #bfs를 돌려 안전 영역 개수 리턴값을 z에 저장하고
+    z = bfs(virus, cnt-3, g) #bfs를 돌려 안전 영역 개수 리턴값을 z에 저장하고
     # cnt - 3 : 0개수 - 벽의 개수 = 벽 세 개 세웠을 때의 안전영역 개수
 
     if area < z: #최고기록을 갱신했다면
@@ -52,4 +53,3 @@ for k in combinations(node, 3): #k : 튜플형태
     g[k[1][0]][k[1][1]] = 0
     g[k[2][0]][k[2][1]] = 0
 print(area)
-
