@@ -1,0 +1,10 @@
+-- 코드를 입력하세요
+-- ANIMAL_TYPE, NAME, SEX_UPON_INTAKE 조회
+-- 아이디 순으로 조회
+-- 이름이 없으면 No name -> IFNULL
+SELECT
+ANIMAL_TYPE,
+IFNULL(Name, "No name") AS NAME,
+SEX_UPON_INTAKE
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID
