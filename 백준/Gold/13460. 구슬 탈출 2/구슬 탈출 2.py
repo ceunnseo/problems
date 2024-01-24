@@ -3,6 +3,9 @@ n, m = map(int, input().split())
 # 세로, 가로
 board = []
 
+#1. 코드가 더럽다.
+#2. 변수 이름 실수하기 좋다. (nxtRedX 이런거)
+#3. 반례 케이스를 생각하기 어렵다.
 
 
 # 큐에 R, B 초기 위치 생성
@@ -39,7 +42,7 @@ while que:
         # 1. 빨간 구슬
         cntR = 0
         nxtRedX, nxtRedY = red[x], red[y]
-        while (0<=nxtRedX+d[x]<n and 0<=nxtRedY+d[y]<m and board[nxtRedX+d[x]][nxtRedY+d[y]] != "#"):
+        while (board[nxtRedX+d[x]][nxtRedY+d[y]] != "#"):
             nxtRedX += d[x]
             nxtRedY += d[y] #굴리고
             cntR += 1
@@ -48,7 +51,7 @@ while que:
         # 2. 파란 구슬
         cntB = 0
         nxtBlueX, nxtBlueY = blue[x], blue[y]
-        while (0<=nxtBlueX+d[x]<n and 0<=nxtBlueY+d[y]<m and board[nxtBlueX+d[x]][nxtBlueY+d[y]] != "#"):
+        while (board[nxtBlueX+d[x]][nxtBlueY+d[y]] != "#"):
             nxtBlueX += d[x]
             nxtBlueY += d[y] #굴리고
             cntB += 1
@@ -70,4 +73,3 @@ if flag:
     print(cnt)
 else:
     print(-1)
-            
