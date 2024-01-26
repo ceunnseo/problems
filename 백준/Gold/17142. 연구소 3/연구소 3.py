@@ -1,59 +1,99 @@
-from itertools import combinations
 from collections import deque
-n, m = map(int, input().split()) #연구소 크기, 바이러스 개수
-maze = []
+from itertools import combinations
+import copy
+n, m = map(int, input().split())
 virus = []
-cnt = 0 #빈 칸 개수
-shortest = n*n+1 #가장 빨리 발생한 확산
+graph = []
+safeZone = 0
+time = 1e5 #최소시간
 for i in range(n):
-    maze.append(list(map(int, input().split())))
+    a = list(map(int, input().split()))
+    graph.append(a)
     for j in range(n):
-        if maze[i][j] == 0: #빈칸인 경우
-            maze[i][j] = -1 #빈칸이면서 방문하지 않은 경우 -1로
-            cnt += 1
-        elif maze[i][j] == 1: #벽인 경우
-            maze[i][j] = "-"
-        elif maze[i][j] == 2: #비활성 바이러스
-            maze[i][j] = "*"
-            virus.append([i, j])
+        if a[j] == 1: #벽을 만났으면
+            a[j] = '-'
+        elif a[j] == 2: # 바이러스
+            virus.append((i, j))
+            graph[i][j] = "*"
+        else: #안전지대
+            graph[i][j] = -1
+            safeZone += 1
 
-def bfs(m_virus, cnt, graph):
-    #print(m_virus)
-    time = 0
-    while m_virus: #큐가 빌 때까지
-        y, x = m_virus.popleft()
-        for (ny, nx) in (y-1, x), (y+1, x), (y, x-1), (y, x+1): #상하좌우
-            if ny < 0 or ny >= n or nx < 0 or nx >= n: #범위 벗어날 경우
+stk = []
+que = deque([])
+#상하좌우
+DELTA = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+#바이러스 표시하고 bfs 진행
+
+def bfs(que):
+    global time
+    safe = 0
+    t = 0
+    graphCopy = [item[:] for item in graph]
+    '''
+    for i in range(len(virus)):
+        x, y = virus[i][0], virus[i][1]
+        if not v[i]:# 비활성화
+            graphCopy[x][y] = "*"
+        else:
+            graphCopy[x][y] = 0 #활성화'''
+    while que:
+        x, y = que.popleft() #바이러스 꺼내서
+        for (dx, dy) in DELTA:
+            nx = x + dx
+            ny = y + dy
+            if nx < 0 or nx >= n or ny < 0 or ny >= n:
                 continue
-            if graph[ny][nx] == -1: #방문을 안 한 빈칸인 경우
-                graph[ny][nx] = graph[y][x] + 1 #1카운트
-                time = graph[ny][nx] #감염된 시간
-                cnt -= 1
-                m_virus.append([ny, nx])
-            elif graph[ny][nx] == "*": #비활성화 바이러스인 경우는 통과되고 감염시키는게 아니다
-                graph[ny][nx] = graph[y][x] + 1 #1카운트
-                m_virus.append([ny, nx])
-    if cnt <= 0: #다 퍼진 경우
-        return time
-    return -1 #다 안 퍼진 경우
+            if graphCopy[nx][ny] == -1: #방문 안한 안전지대
+                graphCopy[nx][ny] = graphCopy[x][y] + 1
+                t = graphCopy[nx][ny]
+                safe += 1
+                que.append((nx, ny))
+            elif graphCopy[nx][ny] == "*": #비활성화
+                graphCopy[nx][ny] = graphCopy[x][y]+1
+                que.append((nx, ny))           
+    if safe == safeZone:
+        time = min(time, t)
+        
+        
+for combi in combinations(virus, m):
+    q = deque([])
+    for (x,y) in combi:
+        graph[x][y] = 0 #활성 바이러스로 바꾸고
+        q.append((x, y))
+    bfs(q)
+    for (x, y) in combi:
+        graph[x][y] = "*" #다시 비활성화로 바꾸고
+            
 
 
-mazeCopy = [items[:] for items in maze] #원본 복사
-for k in combinations(virus, m):
-    m_virus = deque([]) #m개의 바이러스를 담을 큐 (활성화 바이러스)
-    for a, b in k: #바이러스 활성화
-        mazeCopy[a][b] = 0 #활성화 바이러스는 0으로
-        m_virus.append([a, b])
-    #print("==============")
-    times = bfs(m_virus, cnt, mazeCopy)  # bfs 실행하기
-    #print(mazeCopy)
-    for a, b in k:
-        mazeCopy = [items[:] for items in maze] #초기화
-    #print(times)
-    if times >= 0 and shortest > times:
-        shortest = times
-if shortest == n*n + 1:
-    shortest = -1
-print(shortest)
 
 
+'''
+v = [False for _ in range(len(virus))]
+def virusPick(que, cnt):
+    global v
+    if cnt == m:
+        #print("que", que)
+        # maze 활성, 비활성화만 바꿔주고
+        que = deque(stk)
+        #print(que)
+        bfs(que)
+        return #재귀 종료
+    for i in range(len(virus)):
+        if virus[i] not in stk:
+            stk.append(virus[i])
+            v[i] = True
+            virusPick(stk, cnt+1)
+            stk.pop()
+            v[i] = False
+virusPick(stk, 0)'''
+
+
+
+
+if time == 1e5:
+    print(-1)
+else:
+    print(time)
+        
