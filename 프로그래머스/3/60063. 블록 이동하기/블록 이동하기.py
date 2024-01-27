@@ -1,7 +1,4 @@
 from collections import deque
-
-#cur1 = (1, 1), cur2 = (1, 2)
-#cur1 = (cur1[0], cur1[1])
 def can_move(cur1, cur2, new_board):
     y, x = 0, 1
     cand = [] #가능한 좌표들을 모두 넣어두는 리스트
@@ -41,14 +38,16 @@ def solution(board):
 
     #현재 좌표 cur1 = (1, 1), cur2 = (1, 2)
     que = deque([((1,1), (1,2), 0)])
-    #확인용 set
+    #탐색한 좌표들을 담는 visited
     visited = set([((1, 1), (1,2))])
 
     while que:
         cur1, cur2, count = que.popleft() #좌표1, 좌표2, 해당 위치까지 이동하는 횟수
         if cur1 == (N, N) or cur2 == (N, N): #도착한 경우
+            #print(count)
             return count
         for nxt in can_move(cur1, cur2, new_board):
-            if nxt not in visited: #방문하지 않은 좌표인 경우
-                que.append((*nxt, count+1)) #큐에 넣고
-                visited.add(nxt) #방문 기록
+            nxt1, nxt2 = nxt[0], nxt[1]
+            if (nxt1, nxt2) not in visited: #방문하지 않은 좌표인 경우
+                que.append((nxt1, nxt2, count+1)) #큐에 넣고
+                visited.add((nxt1, nxt2)) #방문 기록
