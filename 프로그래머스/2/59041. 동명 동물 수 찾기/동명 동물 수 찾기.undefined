@@ -1,0 +1,8 @@
+-- 코드를 입력하세요
+-- 1. NAME별로 묶어서(GROUP BY) 합계 (SUM) 구한다.
+-- 2. 합계가 1을 넘는 동물만 출력
+SELECT NAME, COUNT(NAME) AS COUNT
+FROM ANIMAL_INS
+GROUP BY NAME
+HAVING COUNT > 1
+ORDER BY NAME ASC;
