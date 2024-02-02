@@ -1,0 +1,14 @@
+-- 코드를 입력하세요
+-- 완료된(STATUS=DONE) 중고거래의 총 금액이 70만원(PRICE >= 70) 이상인 회원 ID(USER_ID), 닉네임(), 총거래금액을 조회하는 SQL문
+-- 총거래금액으로 오름차순 정렬
+-- 두 테이블을 묶고 (WRITER_ID, USER_ID)
+-- 완료된 중고거래만 보여주고(WHERE)
+-- 그 중에서 TOTAL PRICE가 70 이상
+SELECT U.USER_ID,U.NICKNAME, SUM(PRICE) AS TOTAL_PRICE
+FROM USED_GOODS_USER U
+JOIN USED_GOODS_BOARD B
+ON B.WRITER_ID = U.USER_ID
+WHERE B.STATUS = 'DONE'
+GROUP BY U.USER_ID
+HAVING TOTAL_PRICE >= 700000
+ORDER BY TOTAL_PRICE ASC;
