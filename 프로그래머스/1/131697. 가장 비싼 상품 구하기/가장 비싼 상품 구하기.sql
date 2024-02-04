@@ -1,0 +1,4 @@
+-- 코드를 입력하세요
+-- 가장 높은 -> MAX
+SELECT MAX(PRICE) AS MAX_PRICE
+FROM PRODUCT;
