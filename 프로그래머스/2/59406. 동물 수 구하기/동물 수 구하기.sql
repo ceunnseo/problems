@@ -1,0 +1,3 @@
+-- 모든 row 개수 세면 된다
+SELECT COUNT(*) AS COUNT
+FROM ANIMAL_INS;
