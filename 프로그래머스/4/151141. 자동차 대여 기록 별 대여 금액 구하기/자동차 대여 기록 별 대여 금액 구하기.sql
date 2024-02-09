@@ -1,0 +1,38 @@
+#CAR_RENTAL_COMPANY_CAR
+#PK : CAR_ID
+
+#CAR_RENTAL_COMPANY_RENTAL_HISTORY
+#PK : HISTORY_ID
+#FK : CAR_ID <- CAR 테이블의 PK가 다른 테이블에 있는지 봤더니 HISTORY 테이블에 존재한다. 따라서 FK가 된다. 그럼 HISTORY 테이블과 CAR 테이블 두 개를 조인할 수 있음을 알 수 있다.
+
+#CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+#PK : PLAN_ID
+SELECT 
+HISTORY_ID,
+RENTAL_PERIOD * ROUND(DAILY_FEE - (DAILY_FEE * DISCOUNT_RATE), 0) FEE
+FROM (
+SELECT *, 
+    CASE
+    WHEN RENTAL_PERIOD >= 90 THEN (SELECT DISCOUNT_RATE / 100
+                                  FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+                                  WHERE CAR_TYPE = '트럭'
+                                  AND DURATION_TYPE = '90일 이상')
+    WHEN RENTAL_PERIOD >= 30 THEN (SELECT DISCOUNT_RATE / 100
+                                  FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+                                  WHERE CAR_TYPE = '트럭'
+                                  AND DURATION_TYPE = '30일 이상')
+    WHEN RENTAL_PERIOD >= 7 THEN (SELECT DISCOUNT_RATE / 100
+                                  FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+                                  WHERE CAR_TYPE = '트럭'
+                                  AND DURATION_TYPE = '7일 이상')
+    ELSE 0.00 END AS 'DISCOUNT_RATE'
+                              
+FROM (
+SELECT *, DATEDIFF(END_DATE, START_DATE) +1 AS 'RENTAL_PERIOD'
+FROM (
+SELECT CAR.CAR_ID, CAR.DAILY_FEE, HIS.HISTORY_ID, START_DATE, END_DATE
+FROM CAR_RENTAL_COMPANY_CAR CAR
+JOIN CAR_RENTAL_COMPANY_RENTAL_HISTORY HIS
+ON CAR.CAR_ID = HIS.CAR_ID
+WHERE CAR_TYPE = '트럭') TBL_1) TBL_2) TBL_3
+ORDER BY FEE DESC, HISTORY_ID DESC;
