@@ -1,7 +1,5 @@
 def solution(s):
     minimum, n = len(s), len(s)
-    cnt = 1
-    res = 0
     for i in range(1, (n//2)+1):
         start, res, cnt = 0, 0, 1
         while start < n:
