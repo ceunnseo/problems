@@ -1,53 +1,54 @@
 def solution(key, lock):
+    def rotate(size, array, k):
+        arr = [[0]*size for _ in range(size)]
+        if k % 4 == 0: #90도 회전
+            for i in range(size):
+                for j in range(size):
+                    arr[j][size-i-1] = array[i][j]
+            return arr
+        elif k%4 == 1: #180도 회전
+            for i in range(size):
+                for j in range(size):
+                    arr[size-i-1][size-j-1] = array[i][j]
+            return arr
+        elif k%4 == 2:#270도 회전
+            for i in range(size):
+                for j in range(size):
+                    arr[size-j-1][i] = array[i][j]
+            return arr
+        elif k%4 == 3: #360도 회전
+            return array
+    def check(newKey, startX, startY):
+        #1. 열쇠 넣기
+        for i in range(m):
+            for j in range(m):
+                max_lock[startX+i][startY+j] += newKey[i][j]
+        #2. 확인하기
+        flag = True #True면 열쇠가 맞춰진거, False면 열쇠 못 맞춘거
+        for i in range(n):
+            for j in range(n):
+                if max_lock[m+i][m+j] != 1: #0이나 2가 있으면 x
+                    flag = False
+                    break
+        #3. 열쇠 빼기 
+        for i in range(m):
+            for j in range(m):
+                max_lock[startX+i][startY+j] -= newKey[i][j]
+        return flag
+                    
+        
+
     m = len(key)
     n = len(lock)
-    
-    max_lock = [[0] * (n+2*m) for _ in range(n+2*m)]
+    max_lock = [[0]*(n+2*m) for _ in range(n+2*m)]
     for i in range(n):
         for j in range(n):
             max_lock[m+i][m+j] = lock[i][j]
     
-    def rotate(arr, k):
-        N = len(arr)
-        ret = [[0] * N for _ in range(N)]
-        if k%4 == 0:
-            return arr
-        elif k%4 == 1:
-            for r in range(N):
-                for c in range(N):
-                    ret[c][N-1-r] = arr[r][c]
-            return ret
-        elif k%4 == 2:
-            for r in range(N):
-                for c in range(N):
-                    ret[N-1-r][N-1-c] = arr[r][c]
-            return ret
-        elif k%4 == 3:
-            for r in range(N):
-                for c in range(N):
-                    ret[N-1-c][r] = arr[r][c]
-            return ret
-    def compare(max_lock, key, x, y, m, n):
-        answer = True
-        for i in range(m):
-            for j in range(m):
-                max_lock[x+i][y+j] += key[i][j]
-        for i in range(n):
-            if not answer:
-                break
-            for j in range(n):
-                if max_lock[i+m][j+m] != 1:
-                    answer = False
-                    break
-        for i in range(m):
-            for j in range(m):
-                max_lock[x+i][y+j] -= key[i][j]
-        return answer
-    
     for k in range(4):
-        rotate_key = rotate(key, k)
-        for i in range(1, n+m):
-            for j in range(1, n+m):
-                if compare(max_lock, rotate_key, i, j, m, n):
+        newKey = rotate(m, key, k) #회전한 키
+        for i in range(1, m+n):
+            for j in range(1,m+n):
+                if check(newKey, i, j):
                     return True
     return False
