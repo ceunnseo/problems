@@ -3,31 +3,18 @@
  * @return {number[][]}
  */
 var merge = function(intervals) {
-    if (intervals.length === 0) return [];
-    intervals.sort((a, b) => a[0]-b[0])
-    let output = []
+    //1. 시작 시간 기준으로 2차원 배열 오름차순 정렬
+    intervals.sort((a, b) => a[0]-b[0]);
+    const output = [];
     for (interval of intervals) {
-        if (output.length === 0) {
+        const last = output[output.length-1];
+        if (!last || last[1] < interval[0]) {
+            //처음 구간이거나 겹치지 않으면
             output.push(interval)
         }
         else {
-            let midStart = interval[0]
-            let midEnd = interval[1]
-            let idx = output.length-1;
-            let startTime = output[idx][0];
-            let endTime = output[idx][1];
-            if (midStart <= endTime) {
-                if (midStart < startTime) {
-                    output[idx][0] = midStart
-                }
-                if (midEnd > endTime) {
-                    output[idx][1] = midEnd
-                }
-                
-            }
-            else {
-                output.push(interval)
-            }
+            //겹치는 경우 : 종료 시각은 더 큰 시각으로
+            last[1] = Math.max(last[1], interval[1]);
         }
     }
     return output
