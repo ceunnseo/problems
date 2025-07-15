@@ -8,7 +8,7 @@ var isValid = function(word) {
     let hasVowel = false;
     let hasConsonant = false;
     for (let ch of word) {
-        if ((ch >= '0' && ch <= '9')) {
+        if (!isNaN(Number(ch))) {
             continue
         }
         else if ((ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z')) {
