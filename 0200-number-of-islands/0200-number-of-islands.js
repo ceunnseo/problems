@@ -7,14 +7,13 @@ var numIslands = function(grid) {
     const m = grid.length;
     const n = grid[0].length;
     const dfs = (r, c) => {
-        if (r < 0 || r >= m || c < 0 || c >= n) return false;
-        if (grid[r][c] === '0') return false;
+        if (grid[r][c] === '0') return;
         if (grid[r][c] === '1') {
             grid[r][c] = '2';
-            dfs(r-1, c)
-            dfs(r+1, c)
-            dfs(r, c-1)
-            dfs(r, c+1)
+            if (r-1 >= 0) dfs(r-1, c)
+            if (r+1 < m) dfs(r+1, c)
+            if (c-1 >= 0) dfs(r, c-1)
+            if (c+1 < n) dfs(r, c+1)
         }
     }
     for (let i = 0; i < m; i++) {
