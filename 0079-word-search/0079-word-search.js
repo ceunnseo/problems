@@ -4,38 +4,33 @@
  * @return {boolean}
  */
 var exist = function(board, word) {
+    const stack = []
     const m = board.length;
     const n = board[0].length;
-    const visited = Array.from({length : m}, () => Array(n).fill(false))
-    const len = word.length;
-    function* move(x, y) {
-        if (x-1 >= 0) yield [x-1, y]
-        if (x+1 < m) yield [x+1, y]
-        if (y-1 >= 0) yield [x, y-1]
-        if (y+1 < n) yield [x, y+1]
-    } 
-    function dfs(x, y, idx) {
-        if (idx === len) return true;
-        for (const [nx, ny] of move(x, y)) {
-            if (board[nx][ny] === word[idx] && !visited[nx][ny]) {
-                visited[nx][ny] = true;
-                if (dfs(nx, ny, idx+1)) return true;
-                visited[nx][ny] = false;
-            }
-        }
-        return false; //모든 방향을 시도해보았지만 실패한 경우
+    visited = Array.from({length : m}, () => Array(n).fill(false))
+    function* move(r,c) {
+        if (r-1 >= 0) yield [r-1, c];
+        if (r+1 < m) yield [r+1, c];
+        if (c-1 >= 0) yield [r, c-1];
+        if (c+1 < n) yield [r, c+1];
     }
     for (let i = 0; i < m; i++) {
         for (let j = 0; j < n; j++) {
             if (board[i][j] === word[0]) {
-                visited[i][j] = true;
-                if (dfs(i, j, 1)) return true;
-                visited[i][j] = false
-
+                stack.push([i, j, 1]);
+                while (stack.length > 0) {
+                    const [r, c, idx] = stack.pop()
+                    visited[r][c] = true;
+                    if (idx === word.length) return true;
+                    for (const [nr, nc] of move(r, c)) {
+                        if (visited[nr][nc] === false && board[nr][nc] === word[idx]) {
+                            stack.push([nr, nc, idx+1])
+                        }
+                    }
+                }
             }
         }
     }
     return false;
-
-
+    
 };
