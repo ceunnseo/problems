@@ -15,17 +15,12 @@ var exist = function(board, word) {
     }
     const dfs = (r, c, idx) => {
         if (idx === word.length) return true;
+        if (r < 0 || r >= m || c < 0 || c >= n) return false;
         if (visited[r][c] || board[r][c] !== word[idx]) return false;
         visited[r][c] = true;
-        for (const [nr, nc] of move(r, c)) {
-            if (!visited[nr][nc]) {
-                if (dfs(nr, nc, idx+1)) {
-                    return true;
-                }
-            }
-        }
+        const result = dfs(r-1, c, idx+1) || dfs(r+1, c , idx + 1) || dfs(r, c-1, idx+1) || dfs(r, c+1, idx+1)
         visited[r][c] = false;
-        return false;
+        return result;
     }
     for (let i = 0; i < m; i++) {
         for (let j = 0; j < n; j++) {
