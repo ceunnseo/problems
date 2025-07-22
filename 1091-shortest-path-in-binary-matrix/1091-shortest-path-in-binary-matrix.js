@@ -1,22 +1,28 @@
-/**
- * @param {number[][]} grid
- * @return {number}
- */
 var shortestPathBinaryMatrix = function(grid) {
-    let length = 1;
     const n = grid.length;
-    if (grid[n-1][n-1] !== 0 || grid[0][0] !== 0) return -1;
-    const dfs = (r, c) => {
-        if (r >= n || c >= n || r < 0 || c < 0) return false;
-        if (grid[r][c] !== 0) return false; //종료 조건
-        if (r === n-1 && c === n-1) return true;
-        grid[r][c] = 2;
-        length += 1
-        const result = dfs(r+1, c+1) || dfs(r+1, c) || dfs(r, c+1)
-        grid[r][c] = 0;
-        return result;
+    if (grid[0][0] === 1 || grid[n - 1][n - 1] === 1) return -1;
+    const dist = Array.from({length : n}, () => Array(n).fill(0));
+    const directions = [
+        [0, 1], [1, 0], [1, 1],
+        [-1, 0], [0, -1], [-1, -1],
+        [1, -1], [-1, 1]
+    ];
+
+    const queue = [[0, 0]];
+    dist[0][0] = 1;
+
+    while (queue.length > 0) {
+        const [r, c] = queue.shift();
+        for (const [dr, dc] of directions) {
+            const nr = r + dr;
+            const nc = c + dc;
+            if (nr >= 0 && nc >= 0 && nr < n && nc < n) {
+                if (grid[nr][nc] === 0 && dist[nr][nc] === 0) {
+                    dist[nr][nc] = dist[r][c] + 1;
+                    queue.push([nr, nc])
+                }
+            }
+        }
     }
-    dfs(0, 0)
-    //console.log("length, ", length)
-    return length;
+    return dist[n-1][n-1] === 0 ? -1 : dist[n-1][n-1]
 };
