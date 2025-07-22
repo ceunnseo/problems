@@ -5,31 +5,32 @@
 var updateMatrix = function(mat) {
     const m = mat.length;
     const n = mat[0].length;
-    const visited = Array.from({length : m}, () => Array(n).fill(false))
+    const queue = [];
     const dist = Array.from({length : m}, () => Array(n).fill(0))
-    const queue = []
-    const direction = [[0, 1], [1, 0], [0, -1], [-1, 0]]
-    for (let i = 0; i < m; i ++) {
+    const directions = [
+        [-1, 0], [1, 0], [0, -1], [0, 1]
+    ]
+    for (let i = 0; i < m; i++) {
         for (let j = 0; j < n; j++) {
             if (mat[i][j] === 0) {
-                queue.push([i, j]) //시작점이 되는 좌표를 넣는다.
-                visited[i][j] = true;
-            }
+                queue.push([i,j])
+            }   
         }
     }
     while (queue.length > 0) {
         const [r, c] = queue.shift();
-        for (const [dr, dc] of direction) {
+        for (const [dr, dc] of directions) {
             const nr = r + dr;
             const nc = c + dc;
-            if (nr >= 0 && nc >= 0 && nr < m && nc < n) {
-                if (!visited[nr][nc]) {
-                    queue.push([nr, nc])
-                    visited[nr][nc] = true
-                    dist[nr][nc] = dist[r][c] + 1;
-                }
+            if (nr < 0 || nc < 0 || nr >= m || nc >= n) {
+                continue;
+            }
+            if (mat[nr][nc] === 1 && dist[nr][nc] === 0) {
+                console.log('진입', nr, nc)
+                dist[nr][nc] = dist[r][c] + 1;
+                queue.push([nr, nc])
             }
         }
     }
-    return dist
+    return dist;
 };
