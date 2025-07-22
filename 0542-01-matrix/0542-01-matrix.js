@@ -26,7 +26,6 @@ var updateMatrix = function(mat) {
                 continue;
             }
             if (mat[nr][nc] === 1 && dist[nr][nc] === 0) {
-                console.log('진입', nr, nc)
                 dist[nr][nc] = dist[r][c] + 1;
                 queue.push([nr, nc])
             }
