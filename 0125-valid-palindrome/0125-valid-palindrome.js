@@ -2,15 +2,29 @@
  * @param {string} s
  * @return {boolean}
  */
+
 var isPalindrome = function(s) {
-    const cleaned = s.replace(/[^a-z0-9]/gi, "").toLowerCase();
-    const length = cleaned.length;
-    const maximumIdx = Math.floor(length / 2);
-    let i = 0;
-    
-    while (i < maximumIdx) {
-        if (cleaned[i] !== cleaned[length-1-i]) return false;
-        i += 1;
+    const isAlpha = (ch) => {
+        return /^[A-Za-z]$/.test(ch)
+    }
+    const isDigit = (ch) => {
+        return /^[0-9]$/.test(ch)
+    }
+    let left = 0;
+    let right = s.length-1;
+    while (left < right) {
+        while (left < right && !(isAlpha(s[left]) || isDigit(s[left]))) {
+            left++;
+        }
+        while (left < right && !(isAlpha(s[right]) || isDigit(s[right]))) {
+            right--;
+        }
+        if (s[left].toLowerCase() !== s[right].toLowerCase()) {
+            console.log('s[left]', s[left], 's[right]', s[right])
+            return false;
+        }
+        left++;
+        right--;
     }
     return true;
 };
