@@ -4,12 +4,13 @@
  * @return {number[]}
  */
 var twoSum = function(nums, target) {
-    const map = new Map()
-    for (let i = 0; i < nums.length; i++) {
-        const key = target-nums[i];
-        if (map.has(key)) {
-            return [i, map.get(key)]
+    const obj = {}
+    for (let i = 0; i<nums.length; i++) {
+        const key = String(target-nums[i]);
+        if (key in obj) {
+            console.log('있어요', key, nums[i])
+            return [i, obj[key]]
         }
-        map.set(nums[i], i)
+        obj[nums[i]] = i 
     }
 };
