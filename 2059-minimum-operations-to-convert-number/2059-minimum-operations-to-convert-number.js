@@ -5,29 +5,22 @@
  * @return {number}
  */
 var minimumOperations = function(nums, start, goal) {
-    const queue = [];
-    const counts = new Array(1001).fill(-1);
-
-    if (start >= 0 && start <= 1000) {
-        counts[start] = 0;
-    }
-    queue.push(start);
-
+    const visited = Array(1001).fill(false)
+    const queue = []
+    queue.push([start, 0])
+    visited[start] = true
     while (queue.length > 0) {
-        const x = queue.shift();
-        const count = (x >= 0 && x <= 1000) ? counts[x] : 0;
-
-        for (let num of nums) {
-            const candidates = [x + num, x - num, x ^ num];
-
-            for (let candid of candidates) {
-                if (candid === goal) return count + 1;
-                if (candid < 0 || candid > 1000 || counts[candid] !== -1) continue;
-                counts[candid] = count + 1;
-                queue.push(candid);
+        const [x, cnt] = queue.shift()
+        if (x === goal) return cnt;
+        for (let i of nums) {
+            const next = [x + i, x-i, x^i]
+            for (let nxt of next) {
+                if (nxt === goal) return (cnt + 1)
+                if (visited[nxt] || nxt < 0 || nxt > 1000) continue;
+                visited[nxt] = true
+                queue.push([nxt, cnt + 1])
             }
         }
     }
-
-    return -1;
+    return -1
 };
