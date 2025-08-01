@@ -27,5 +27,5 @@ var reorderSpaces = function(text) {
     }
     const betweenSpace = Math.floor(space / (wordList.length-1))
     const lastSpace = (space % (wordList.length - 1))
-    return wordList.join(' '.repeat(betweenSpace)) + lastSpace
+    return wordList.join(' '.repeat(betweenSpace)) + ' '.repeat(lastSpace)
 };
