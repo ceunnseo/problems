@@ -4,9 +4,10 @@
  * @return {string}
  */
 var restoreString = function(s, indices) {
-    const result = Array(s.length).fill('')
-    indices.forEach((next, prev) => {
-        result[next] = s[prev]
-    })
+    const result = [];
+    for (let i = 0; i < indices.length; i++) {
+        result[indices[i]] = s[i]
+        //console.log(result)
+    }
     return result.join('')
 };
