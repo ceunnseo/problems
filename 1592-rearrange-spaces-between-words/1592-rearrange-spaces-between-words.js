@@ -3,20 +3,15 @@
  * @return {string}
  */
 var reorderSpaces = function(text) {
-    let newTextArray = text.split(" ").filter((x) => x.length > 0);
-    let totalSpaces = text.length - newTextArray.join().replaceAll(',','').length
-    let spaceDistribution = Math.floor(totalSpaces / (newTextArray.length - 1));
-    const char = ' ';
+    const textList = text.split(' ').filter((x) => x.length > 0)
+    const spaces = text.length - textList.join().replaceAll(',', '').length
+    if (textList.length === 1) return textList[0] + ' '.repeat(spaces);
+    const spaceEvenly = Math.floor(spaces / (textList.length - 1));
+    const spaceLastly = spaces - (spaceEvenly * (textList.length-1));
     let newText = '';
-    let spaceCounter = 0;
-    for (let i = 0; i < newTextArray.length; i++) {
-        newText += newTextArray[i];
-        if (i === newTextArray.length-1) {
-            newText += char.repeat(totalSpaces - spaceCounter);
-            break;
-        }
-        spaceCounter = spaceCounter + spaceDistribution;
-        newText += char.repeat(spaceDistribution);
+    for (let i = 0; i < textList.length; i++) {
+        if (i === textList.length-1) newText += textList[i] + ' '.repeat(spaceLastly)
+        else newText += textList[i] + ' '.repeat(spaceEvenly)
     }
-    return newText
+    return newText;
 };
