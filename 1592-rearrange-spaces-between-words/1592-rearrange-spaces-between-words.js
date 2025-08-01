@@ -5,12 +5,13 @@
 var reorderSpaces = function(text) {
     let space = 0;
     let word = ''
-    let res = []
+    let wordList = []
+    //공백과 단어 세기
     for (t of text) {
         if (t === ' ') {
             space += 1
             if (word !== '') {
-                res.push(word)
+                wordList.push(word)
                 word = ''
             }
         }
@@ -18,18 +19,13 @@ var reorderSpaces = function(text) {
             word += t
         }
     }
-    if (word !== '') res.push(word)
-    //console.log(Math.floor(space / (res.length-1)), space % (res.length-1))
-    let result = ''
-    if (res.length === 1) {
-        result += res[0] + ' '.repeat(space)
-        return result
+    if (word !== '') wordList.push(word)
+
+    //공백 붙이기
+    if (wordList.length === 1) {
+        return wordList[0] + ' '.repeat(space)
     }
-    const subSpace = Math.floor(space / (res.length-1))
-    const lastSpace = (space % (res.length-1)) //남는 문자
-    for (let i = 0; i < res.length; i++) {
-        if (i !== res.length-1) result += res[i] + (' '.repeat(subSpace))
-        else result += res[i] + (' '.repeat(lastSpace))
-    }
-    return result
+    const betweenSpace = Math.floor(space / (wordList.length-1))
+    const lastSpace = (space % (wordList.length - 1))
+    return wordList.join(' '.repeat(betweenSpace)) + lastSpace
 };
