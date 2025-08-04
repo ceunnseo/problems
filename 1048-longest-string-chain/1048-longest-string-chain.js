@@ -3,23 +3,21 @@
  * @return {number}
  */
 var longestStrChain = function(words) {
-    const dp = {}
-    words.sort((a, b) => b.length - a.length)
+    const dp = new Map()
+    words.sort((a, b) => a.length - b.length) //길이가 짧은 순서로 정렬
+    let maxLen = 1;
     for (const word of words) {
-        dp[word] = 1
-    }
-
-    for (const word of words) {
-        const wordList = word.split('')
-        for (let i = 0; i< wordList.length; i++) {
-            const sub = word.slice(0, i) + word.slice(i+1, wordList.length)
-            if (sub in dp) {
+        let best = 1;
+        for (let i = 0; i< word.length; i++) {
+            const sub = word.slice(0, i) + word.slice(i+1, word.length)
+            if (dp.has(sub)) {
                 //console.log(word, sub)
-                dp[sub] = Math.max(dp[word] + 1, dp[sub])
+                best = Math.max(best, dp.get(sub) + 1)
             }
+            dp.set(word, best);
+            maxLen = Math.max(maxLen, best)
         } 
     }
-    console.log(dp)
-    return (Math.max(...Object.values(dp)))
+    return maxLen;
 
 };
