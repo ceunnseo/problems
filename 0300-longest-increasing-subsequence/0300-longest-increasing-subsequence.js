@@ -3,17 +3,17 @@
  * @return {number}
  */
 var lengthOfLIS = function(nums) {
-    const dp = new Map();
-    let res = 0;
-    for (let i = 0; i < nums.length; i++) {
-        let large = 1;
-        for (let j = 0; j < i; j++) {
-            if (nums[j] < nums[i]) {
-                large = Math.max(large, dp[nums[j]]+1);
+    const n = nums.length;
+    const dp = new Array(n).fill(1);
+    let res = 1;
+    for (let i = 0; i < n; i++) {
+        for (let j = i; j >= 0; j--) {
+            if (nums[i] > nums[j]) {
+                dp[i] = Math.max(dp[i], dp[j] + 1)
             }
         }
-        dp[nums[i]] = large
-        res = Math.max(res, dp[nums[i]])
+        res = Math.max(res, dp[i])
+
     }
     return res
 };
