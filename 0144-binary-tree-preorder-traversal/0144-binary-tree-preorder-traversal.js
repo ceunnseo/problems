@@ -11,15 +11,14 @@
  * @return {number[]}
  */
 var preorderTraversal = function(root) {
-    const stack = []
-    const res = []
-    if (root) stack.push(root)
-    console.log(stack)
-    while (stack.length > 0) {
-        const node = stack.pop(); //스택에서 노드 꺼내기
-        res.push(node.val) //현재 노드의 값을 결과에 저장하기
-        if (node.right) stack.push(node.right);
-        if (node.left) stack.push(node.left);
+    const visited = []
+    const dfs = (node) => {
+        if (node === null) return;
+        visited.push(node.val);
+        dfs(node.left);
+        dfs(node.right)
     }
-    return res
+    dfs(root)
+    return visited;
+    
 };
