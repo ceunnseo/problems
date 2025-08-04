@@ -12,7 +12,7 @@ var longestStrChain = function(words) {
     for (const word of words) {
         const wordList = word.split('')
         for (let i = 0; i< wordList.length; i++) {
-            const sub = wordList.slice(0, i).join('') + wordList.slice(i+1, wordList.length).join('')
+            const sub = word.slice(0, i) + word.slice(i+1, wordList.length)
             if (sub in dp) {
                 //console.log(word, sub)
                 dp[sub] = Math.max(dp[word] + 1, dp[sub])
