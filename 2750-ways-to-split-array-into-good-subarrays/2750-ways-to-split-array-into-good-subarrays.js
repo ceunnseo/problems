@@ -17,6 +17,8 @@ var numberOfGoodSubarraySplits = function(nums) {
     const res = []
     let isZero = 0
     let isCountable = false;
+    let finalResult = 1;
+    const M = 1000000007;
     for (const n of nums) {
         if (n === 0 && isCountable) {
             isZero += 1;
@@ -25,10 +27,13 @@ var numberOfGoodSubarraySplits = function(nums) {
             isCountable = true
             if (isZero !== 0) {
                 res.push(isZero);
+                finalResult = (finalResult * (isZero+1)) % M;
                 isZero = 0;
             }
         }
     }
+    if (!isCountable) return 0;
+    return finalResult;
     if (!isCountable) return 0; //1이 나온 적이 없을 때
     if (res.length === 0) return 1; //1은 나왔지만 1과 1사이 자를 수 없을 때
     let result = 1n; //n을 붙여서 BigInt 타입
