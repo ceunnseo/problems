@@ -8,18 +8,17 @@ var combinationSum = function(candidates, target) {
     let subsets = new Set();
     let dict = {};
     let result = [];
+    candidates.sort((a, b) => a-b);
     function dfs(total,startIdx,path) {
         if (total > target) return;
         if (total === target) {
             dict[[...path].sort((a,b) => a-b)] = 1;
         }
         for (let i = startIdx; i < candidates.length; i++) {
-            if (target-total < candidates[i]) continue; //탐색하지 않는다.
-            let res = total + candidates[i];
-            let paths = [...path];
-            paths.push(candidates[i])
-            dfs(res, i, paths);
-            paths.pop();
+            if (target-total < candidates[i]) break; //탐색하지 않는다.
+            path.push(candidates[i]) //새로운 윈소 추가
+            dfs(total + candidates[i], i, path);
+            path.pop();
         }
     }
     dfs(0, 0, [])
