@@ -5,11 +5,13 @@
 var FindSumPairs = function(nums1, nums2) {
     this.nums1 = nums1;
     this.nums2 = nums2;
-    this.freq = new Map(); //map 생성
-    for (let num of nums2) {
-        this.freq.set(num, (this.freq.get(num) || 0) + 1)
+    this.n1 = this.nums1.length;
+    this.n2 = this.nums2.length;
+    this.dict = {};
+    for (let i = 0; i < this.n1; i++) {
+        if (!this.dict[this.nums1[i]]) this.dict[this.nums1[i]] = 0;
+        this.dict[this.nums1[i]] += 1;
     }
-    
 };
 
 /** 
@@ -18,16 +20,7 @@ var FindSumPairs = function(nums1, nums2) {
  * @return {void}
  */
 FindSumPairs.prototype.add = function(index, val) {
-    const oldVal = this.nums2[index];
-    const newVal = oldVal + val;
-
-    //freq 업데이트
-    this.freq.set(oldVal, this.freq.get(oldVal)-1);
-    if (this.freq.get(oldVal) === 0) this.freq.delete(oldVal);
-
-    this.freq.set(newVal, (this.freq.get(newVal) || 0)+1);
-    this.nums2[index] = newVal;
-    
+    this.nums2[index] += val;
 };
 
 /** 
@@ -35,15 +28,12 @@ FindSumPairs.prototype.add = function(index, val) {
  * @return {number}
  */
 FindSumPairs.prototype.count = function(tot) {
-    let cnt = 0
-    for (let num of this.nums1) {
-        let b = tot-num
-        if (this.freq.get(b)) {
-            cnt += this.freq.get(b)
-        }
+    let cnt = 0;
+    for (let i = 0; i < this.n2; i++) {
+        let target = tot - this.nums2[i];
+        if (this.dict[target]) cnt += this.dict[target];
     }
     return cnt;
-    
 };
 
 /** 
@@ -52,7 +42,3 @@ FindSumPairs.prototype.count = function(tot) {
  * obj.add(index,val)
  * var param_2 = obj.count(tot)
  */
-
-var nums1 = [1,1,2,2,2,3];
-var nums2 = [1,4,5,2,5,4];
-var obj = new FindSumPairs(nums1, nums2);
