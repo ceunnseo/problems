@@ -10,70 +10,72 @@ class MyMinPriorityQueue {
     size() {
         return this.heap.length;
     }
-    enqueue(element) { //값은 맨 끝에 넣고, 자기 위치를 찾아가도록
-        this.heap.push(element);
+    enqueue(element) {
+        this.heap.push(element); //맨 끝에 넣고
         this.bubbleUp();
     }
     dequeue() {
-        if (this.size() ===1 ) return this.heap.pop(); 
-        //하나밖에 없을때는 그냥 빼면 된다
+        //사이즈가 한 개면 그냥 pop 해서 리턴해주면 된다
+        if (this.size() === 1) return this.heap.pop();
 
-        const min = this.heap[0]; //root 값이 가장 작고
-        this.heap[0] = this.heap.pop(); //미리 빼고
+        //그렇지 않은 경우에는 
+        const min = this.heap[0]; //가장 작은 값 = root
+        this.heap[0] = this.heap.pop(); //맨 끝 자식값이 위로 올라가고
         this.bubbleDown();
         return min;
     }
-    bubbleUp() { //자식이 부모로 올라가는 과정
-        let index = this.heap.length-1; //자식 인덱스
-        while (index > 0) {
-            let parentIndex = Math.floor((index-1) / 2);
-            if (this.heap[index].dist < this.heap[parentIndex].dist) {
-                [this.heap[index], this.heap[parentIndex]] = [this.heap[parentIndex], this.heap[index]];
-                index = parentIndex;
+    bubbleUp() {
+        let child = this.size()-1; //맨 끝 인덱스
+        while (child > 0) {
+            let parent = Math.floor((child-1) / 2); 
+            if (this.heap[parent].dist > this.heap[child].dist) { //자식이 더 작으면 위로 올라가야 함
+                [this.heap[parent], this.heap[child]] = [this.heap[child], this.heap[parent]]
+                child = parent;
             }
-            else {
+            else { //그렇지 않으면 bubbleUp 종료
                 break;
             }
         }
-    }
+    } //root -> 자기 자리 (자식)으로 조건에 따라 이동시킨다.
     bubbleDown() {
-        let index = 0;
-        const length = this.heap.length;
-        const element = this.heap[0];
+        let idx = 0;
+        let length = this.size();
+        let element = this.heap[idx];
         while (true) {
-            let leftChildIndex = 2 * index + 1;
-            let rightChildIndex = 2 * index + 2;
-            let leftChild, rightChild;
+            let leftIdx = 2 * idx + 1;
+            let rightIdx = 2 * idx + 2;
+            let left, right;
             let swap = null;
-            if (leftChildIndex < length) {
-                leftChild = this.heap[leftChildIndex];
-                if (leftChild.dist < element.dist) {
-                    swap = leftChildIndex;
+            if (leftIdx < length) {
+                left = this.heap[leftIdx];
+                if (left.dist < element.dist) {
+                    swap = leftIdx;
                 }
             }
-            if (rightChildIndex < length) {
-                rightChild = this.heap[rightChildIndex];
-                if ((swap === null && rightChild.dist < element.dist) || (swap !== null && rightChild.dist < leftChild.dist)) {
-                    swap = rightChildIndex;
+            if (rightIdx < length) {
+                right = this.heap[rightIdx];
+                if ((swap === null && right.dist < element.dist) || (swap !== null && right.dist < left.dist)) {
+                    swap = rightIdx;
                 }
             }
             if (swap === null) break;
-            [this.heap[index], this.heap[swap]] = [this.heap[swap], this.heap[index]];
-            index = swap;
-        }
+            [this.heap[idx], this.heap[swap]] = [this.heap[swap], this.heap[idx]];
+            idx = swap;
+        } 
     }
 }
 var kClosest = function(points, k) {
     const pq = new MyMinPriorityQueue();
-    const result = [];
+    const res = [];
     for (const [x, y] of points) {
-        const dist = (x**2) + (y**2);
+        const dist = x**2 + y**2
         pq.enqueue({dist : dist, x : x, y : y});
     }
-    while (k > 0) {
+    while (k) {
         const {dist, x, y} = pq.dequeue();
-        result.push([x, y])
+        res.push([x,y])
         k--;
     }
-    return result;
+    return res;
+
 };
