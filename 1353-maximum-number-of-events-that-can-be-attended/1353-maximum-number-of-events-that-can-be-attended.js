@@ -86,8 +86,6 @@ var maxEvents = function(events) {
             pq.dequeue();
         }//이미 지나버린 이벤트가 있는 경우 -> 삭제 (예시 : day 3, 이벤트 종료일 2일)
         if (pq.size() > 0) { 
-            console.log('참여하는 이벤트', pq.peek())
-            console.log('현재 pq 의 크기', pq.size())
             pq.dequeue();
             cnt += 1;
         } //그 중에서 가장 빨리 끝나는 스케줄을 먼저 처리
