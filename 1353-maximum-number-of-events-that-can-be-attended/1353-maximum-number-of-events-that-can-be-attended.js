@@ -71,13 +71,11 @@ var maxEvents = function(events) {
     let endDay = 0;
     for (let i = 0; i < events.length; i++) {
         endDay = Math.max(endDay, events[i][1])
-    }
+    } //이벤트 마지막 날짜를 구하는 과정이 비효율적임
     let day = startDay;
     let cnt = 0;
     let idx = 0;
-    console.log(events, endDay)
     while (day <= endDay) {
-        console.log('day : ',day)
         while (idx < events.length && events[idx][0] <= day) {
             pq.enqueue(events[idx][1]);
             idx += 1;
