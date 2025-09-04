@@ -28,7 +28,7 @@ var validateCoupons = function(code, businessLine, isActive) {
     }
     for (const b of businessList) {
         const coupons = businessMap.get(b);
-        console.log(b, coupons);
+        //console.log(b, coupons);
         if (coupons.length > 0) {
             coupons.sort();
             res.push(...coupons);
