@@ -3,24 +3,22 @@
  * @return {number[][]}
  */
 var permute = function(nums) {
-    const res = [];
-    const n = nums.length;
-    function dfs(path, visited) {
-        if (path.length === n) {
-            res.push([...path]); 
-            return true;
+    const result = []
+    const used = Array(nums.length).fill(false)
+    function backtrack(path) {
+        if (path.length === nums.length) {
+            result.push([...path])
+            return
         }
-        for (let i = 0; i < n; i++) {
-            if (!set.has(i)) {
-                path.push(nums[i]);
-                visited.add(i);
-                if (dfs(path, visited)) true;
-                visited.delete(i);
-                path.pop();
-            }
+        for (let i = 0; i < nums.length; i++) {
+            if (used[i] === true) continue;
+            used[i] = true
+            path.push(nums[i]);
+            backtrack(path)
+            path.pop();
+            used[i] = false;
         }
     }
-    const set = new Set()
-    dfs([], set)
-    return res;
+    backtrack([])
+    return result
 };
