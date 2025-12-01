@@ -19,9 +19,9 @@ var longestValidParentheses = function(s) {
         }
     }
     for (const v of visited) {
-        if (v) cnt +=1 ;
-        else cnt = 0;
-        maximum = Math.max(maximum, cnt);
+        if (v) cnt +=1 ; //길이 증가하다가
+        else cnt = 0; //false를 만나면 끊긴거니까 0으로
+        if (maximum < cnt) maximum = cnt;
     }
     return maximum;
 };
