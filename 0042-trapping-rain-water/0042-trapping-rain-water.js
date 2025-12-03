@@ -7,7 +7,7 @@ var trap = function(height) {
     let result = 0;
     const stack =[];
     for (let i = 0; i < height.length; i++) {
-        while (stack.length && height[stack[stack.length-1]] <= height[i]) {
+        while (stack.length && height[stack[stack.length-1]] < height[i]) {
             const bottomIdx = stack.pop(); 
             const bottomHeight = height[bottomIdx];
             if (stack.length === 0) break; //왼쪽 벽이 없음
