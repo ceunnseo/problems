@@ -24,7 +24,6 @@ var shortestPathBinaryMatrix = function(grid) {
             }
         }
     }
-    console.log(visited);
     if (visited[n-1][n-1] === 0) return -1;
     return visited[n-1][n-1];
 };
