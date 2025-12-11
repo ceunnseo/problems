@@ -2,31 +2,41 @@
  * @param {number} n
  * @return {string[][]}
  */
+//visited 2차원 배열로 모두 관리했을 때 문제점 = 이 칸을 다시 방문 해제 해도 되는건지 모른다.
+
 var solveNQueens = function(n) {
-    const res = [];
-    const board = Array.from({length : n}, () => Array(n).fill('.'));
-    const cols = new Set(); // => 사용한 열
-    const diag1 = new Set(); // => \ 방향의 대각선 (하향대각선)
-    const diag2 = new Set(); // => / 방향의 대각선 (상향대각선)
-    function backtrack(r) {
-        if (r === n) { //모든 row에 체스를 둔 경우
-            res.push(board.map(row => row.join('')));
+    const v1 = Array.from({length : n}, () => Array(n).fill(false)); //col
+    const v2 = Array.from({length : n}, () => Array(n).fill(false)); //오른대각선
+    const v3 = Array.from({length : n}, () => Array(n).fill(false)); //왼대각선
+    const arr = Array.from({length : n}, () => Array(n).fill('.'));
+    const result = [];
+    
+    function dfs(row) {
+        if (row === n) {
+            result.push(arr.map(v => v.join('')));
             return;
         }
-        for (let c = 0; c < n; c++) { 
-            if (cols.has(c) || diag1.has(r-c) || diag2.has(r+c)) continue;
-            cols.add(c);
-            diag1.add(r-c);
-            diag2.add(r+c);
-            board[r][c] = 'Q';
-            backtrack(r+1); //그 다음 row에 놓을 수 있는 칸이 있는지 탐색
-            board[r][c] = '.';
-            cols.delete(c);
-            diag1.delete(r-c);
-            diag2.delete(r+c);
+        for (let j = 0; j < n; j++) { //(i,j)에 퀸을 놔도 되는지 확인하기
+            if (v1[row][j] || v2[row][j] || v3[row][j]) continue; //세로, 오른대각선, 왼대각선 확인
+            //퀸을 놓고 방문 처리
+            arr[row][j] = 'Q'; 
+            //console.log('퀸 놓기', arr, row, j)
+            for (let i = row+1; i < n; i++) {
+                v1[i][j] = true; //세로 방문처리
+                if (i+j-row < n) v2[i][i+j-row] = true;
+                if (row+j-i >= 0) v3[i][row+j-i] = true; //왼 대각선 방문 처리
+            }
+            dfs(row+1); //다음 칸으로 이동하기
+            //퀸을 빼고 방문 취소
+            arr[row][j] = '.'; 
+            for (let i = 0; i < n; i++) {
+                v1[i][j] = false; //세로 방문처리
+                if (i+j-row < n) v2[i][i+j-row] = false; //오른대각선
+                if (row+j-i >= 0) v3[i][row+j-i] = false; //왼 대각선 방문 처리
+            }
         }
     }
-    backtrack(0);
-    return res;
-    
+    dfs(0);
+    console.log(result);
+    return result;
 };

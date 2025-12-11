@@ -3,21 +3,21 @@
  * @return {number[][]}
  */
 var subsets = function(nums) {
-    const res = [[]];
-    const visited = Array(nums.length).fill(false);
-    function dfs(path, start) {
-        if (path.length > 0 && path[path.length-1] === nums[nums.length-1]) return;
-        for (let i = start; i < nums.length; i++) {
-            if (visited[i]) continue;
-            path.push(nums[i]);
-            visited[i] = true
-            res.push([...path]);
-            dfs(path, i+1);
-            visited[i] = false;
-            path.pop();
-
+    const n = nums.length;
+    const total = 1 << n; //2^n : 1이라는 숫자를 2진수로 보고 왼쪽으로 n번 이동시킨다.
+    // 1<<n 자체가 n번째 비트만 1인 숫자를 만드는 것
+    //n=3이면 0001 -> 1000 (10진수로는 8)
+    const result = [];
+    // 000, 001, 010, 011, 100, 101, 110, 111 까지만
+    for (let bitMask = 0; bitMask < total; bitMask++) {
+        subset = [];
+        for (let j = 0; j < n; j++) {
+            //j=0 -> 1<<j 이므로 001 -> 101
+            if (bitMask & (1<<j)) {
+                subset.push(nums[j]);
+            }
         }
+        result.push(subset);
     }
-    dfs([], 0);
-    return res;
+    return result;
 };

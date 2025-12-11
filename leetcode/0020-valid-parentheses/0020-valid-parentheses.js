@@ -4,20 +4,21 @@
  */
 var isValid = function(s) {
     const stack = [];
-    const dic = {
-        ')': '(',
-        '}': '{',
-        ']': '['
-    };
-    for (let i = 0; i< s.length; i++) {
-        const ch = s[i]
-        if (ch === '(' || ch === '[' || ch === '{') { //여는 괄호
-            stack.push(ch)
+    const brackets = {')' : '(', '}' : '{' , ']' : '['};
+    const open = new Set(Object.values(brackets)); //여는 괄호 set
+    for (const str of s) {
+        if (open.has(str)) { //여는 괄호를 만났으면 = stack에 추가
+            console.log('open', str);
+            stack.push(str);
         }
-        else { //닫힌 괄호
-            if (dic[ch] !== stack.pop()) return false;
+        else if (stack.length && stack[stack.length-1] === brackets[str]) {
+            console.log('짝을 만남', stack[stack.length-1], str);
+            stack.pop();
+        }
+        else {
+            console.log('짝이 아님', stack[stack.length-1], str);
+            return false;
         }
     }
-    if (stack.length === 0) return true;
-    return false;
+    return true;
 };

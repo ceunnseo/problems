@@ -3,23 +3,25 @@
  * @return {number}
  */
 var longestValidParentheses = function(s) {
-    const stack = [-1]; //초기 기준점
-    let maxLen = 0; //최대 길이
-    for (let i = 0; i < s.length; i++) {
-        if (s[i] === '(') {
-            stack.push(i)
-        }
+    const n = s.length;
+    const visited = Array(n).fill(false);
+    const stack = [];
+    let cnt = 0;
+    let maximum = 0;
+    for (let i = 0; i < n; i++) {
+        if (s[i] === '(') stack.push(i);
         else {
-            stack.pop() //짝을 찾았고
-            if (stack.length === 0) { //더 이상 기준점 없으면
-                stack.push(i)
+            if (stack.length) {
+                const k = stack.pop();
+                visited[i] = true;
+                visited[k] = true;
             }
-            else {
-                len = i - stack[stack.length-1];
-                maxLen = Math.max(maxLen, len)
-            }
-
         }
     }
-    return maxLen;
+    for (const v of visited) {
+        if (v) cnt +=1 ; //길이 증가하다가
+        else cnt = 0; //false를 만나면 끊긴거니까 0으로
+        if (maximum < cnt) maximum = cnt;
+    }
+    return maximum;
 };

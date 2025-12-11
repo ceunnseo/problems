@@ -3,31 +3,35 @@
  * @return {string[][]}
  */
 var partition = function(s) {
-    const res = [];
-    function validPalindrome(s) {
-        let left = 0, right = s.length-1;
+    function isPalindrome(s) {
+        let left = 0;
+        let right = s.length-1;
         while (left < right) {
             if (s[left] !== s[right]) return false;
-            left++;
+            left++; 
             right--;
         }
         return true;
     }
-    function makePalindrome(path, s){
+    const result = [];
+    function makeslices(path, s){
+        //console.log('makeslices', path, s)
         if (s === "") {
-            res.push([...path]);
+            result.push([...path]);
             return;
         }
         for (let i = 1; i <= s.length; i++) {
-            const quo = s.slice(0, i); //몫
-            const re = s.slice(i, s.length) //나머지
-            if (validPalindrome(quo)) { //몫이 팰린드롬이라면
-                path.push(quo);
-                makePalindrome(path, re); 
+            const s1 = s.slice(0, i);
+            const s2 = s.slice(i, s.length);
+            //console.log('s1, s2', s1, s2)
+            if (isPalindrome(s1)) {
+                path.push(s1);
+                makeslices(path, s2);
                 path.pop();
             }
         }
     }
-    makePalindrome([],s);
-    return res;
+    makeslices([], s);
+    //console.log('result', result)
+    return result;
 };

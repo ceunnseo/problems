@@ -1,28 +1,29 @@
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
 var shortestPathBinaryMatrix = function(grid) {
     const n = grid.length;
-    if (grid[0][0] === 1 || grid[n - 1][n - 1] === 1) return -1;
-    const dist = Array.from({length : n}, () => Array(n).fill(0));
-    const directions = [
-        [0, 1], [1, 0], [1, 1],
-        [-1, 0], [0, -1], [-1, -1],
-        [1, -1], [-1, 1]
-    ];
-
     const queue = [[0, 0]];
-    dist[0][0] = 1;
-
-    while (queue.length > 0) {
-        const [r, c] = queue.shift();
-        for (const [dr, dc] of directions) {
-            const nr = r + dr;
-            const nc = c + dc;
-            if (nr >= 0 && nc >= 0 && nr < n && nc < n) {
-                if (grid[nr][nc] === 0 && dist[nr][nc] === 0) {
-                    dist[nr][nc] = dist[r][c] + 1;
-                    queue.push([nr, nc])
-                }
+    let head = 0;
+    //방향 설정하기 (상, 하, 좌, 우, 왼쪽위, 왼쪽아래, 오른쪽위, 오른쪽아래)
+    const dr = [-1, 1, 0, 0, -1,-1, 1, 1 ];
+    const dc = [0, 0, -1, 1, 1, -1, -1, 1];
+    const visited = Array.from({length : n}, () => Array(n).fill(-1));
+    visited[0][0] = 1;
+    if (grid[0][0] === 1 || grid[n-1][n-1] === 1) return -1;
+    while (head < queue.length) {
+        const [r, c] = queue[head++];
+        for (let i = 0; i < 8; i++) {
+            const nr = r + dr[i];
+            const nc = c + dc[i];
+            if (nr < 0 || nr >= n || nc < 0 || nc >= n) continue;
+            if (visited[nr][nc] === -1 && grid[nr][nc] === 0) {
+                queue.push([nr,nc])
+                visited[nr][nc] = visited[r][c] + 1;
             }
         }
     }
-    return dist[n-1][n-1] === 0 ? -1 : dist[n-1][n-1]
+    if (visited[n-1][n-1] === 0) return -1;
+    return visited[n-1][n-1];
 };

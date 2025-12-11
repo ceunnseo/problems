@@ -2,52 +2,41 @@
  * @param {character[][]} board
  * @return {void} Do not return anything, modify board in-place instead.
  */
-//1. 채워야 하는 칸의 위치를 리스트로 저장
-//2. row, col, 3*3 칸에 포함되지 않은 숫자를 하나씩 시도
 var solveSudoku = function(board) {
-    const nodes = [];
-    //r번째 row에 target이라는 숫자가 있는지를 체크하는 함수
-    function checkRow(r, target){
-        for (let i = 0; i < 9; i++) {
-            if (board[r][i] === target) return false;
-        }
-        return true;
-    }
-    //c번째 column에 target이라는 숫자가 있는지 체크하는 함수
-    function checkCol(c, target){
-        for (let i = 0; i < 9; i++) {
-            if (board[i][c] === target) return false;
-        }
-        return true;
-    }
-    //3*3 board에 target이라는 숫자가 있는지 체크하는 함수
-    function checkRect(r, c, target) {
-        const startRow = Math.floor(r/3) * 3;
-        const startCol = Math.floor(c/3) * 3;
-        for (let i = startRow; i < startRow + 3; i++) {
-            for (let j = startCol; j < startCol + 3; j++) {
-                if (board[i][j] === target) return false;
-            }
-        }
-        return true;
+    const stack = [];
+    const rows = Array.from({length : 9}, () => Array(10).fill(false));
+    const cols = Array.from({length : 9}, () => Array(10).fill(false));
+    const boxes = Array.from({length : 9}, () => Array(10).fill(false));
+    function dfs(){
+        if (stack.length === 0) return true;
+        const [r, c] = stack.pop();
+        const boxIndex = Math.floor(r/3) * 3 + Math.floor(c/3);
+        for (let n = 1; n <= 9; n++) { //1부터 9까지 모든 숫자를 탐색해보자 (n:1~9)
+            if (rows[r][n] || cols[c][n] || boxes[boxIndex][n]) continue;   
+            board[r][c] = String(n); //채우고
+            rows[r][n] = cols[c][n] = boxes[boxIndex][n] = true;
+            if (dfs()) return true;
+            board[r][c] = '.'; //백트래킹
+            rows[r][n] = cols[c][n] = boxes[boxIndex][n] = false;
+        } 
+        stack.push([r, c]);
+        return false; //아무것도 숫자를 적지 못한 경우 = 실패함
     }
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            if (board[i][j] === '.') nodes.push([i, j])
-        }
-    }
-    function dfs(idx){
-        if (idx === nodes.length) return true;
-        const [r, c] = nodes[idx];
-        for (let i = 1; i <= 9; i++) {
-            const target = String(i)
-            if (checkRow(r, target) && checkCol(c, target) && checkRect(r, c, target)) {
-                board[r][c] = target;
-                if (dfs(idx+1)) return true;
-                board[r][c] = '.'
+            const v = board[i][j];
+            if (v === '.') {
+               stack.push([i,j]);
+            }
+            else {
+                const n= Number(v);
+                const b = Math.floor(i/3) * 3 + Math.floor(j/3);
+                rows[i][n] = true;
+                cols[j][n] = true;
+                boxes[b][n] = true;
             }
         }
-        return false;
     }
-    dfs(0);
+    dfs();
+    console.log(board);
 };
